@@ -1,216 +1,113 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>ウマ娘風・育成＆レース（スタミナ重視版）</title>
-    <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #eef2f3; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; margin-bottom: 10px; }
-        
-        /* ステータス表示 */
-        .status-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid #ddd; }
-        .stat-item { font-weight: bold; font-size: 1.1em; color: #444; }
-        .stat-val { color: #2980b9; font-size: 1.2em; }
-        .turn-highlight { grid-column: 1 / 3; background: #34495e; color: white; padding: 5px; border-radius: 5px; }
-
-        /* ボタンデザイン */
-        .btn-group { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        button { padding: 12px 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; transition: 0.3s; color: white; }
-        .btn-speed { background-color: #e74c3c; }
-        .btn-stamina { background-color: #27ae60; }
-        .btn-rest { background-color: #f1c40f; color: #333; }
-        .btn-race { background-color: #3498db; width: 100%; margin-top: 10px; font-size: 1.2em; }
-        button:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
-        button:disabled { background-color: #bdc3c7; cursor: not-allowed; transform: none; }
-
-        /* レース画面 */
-        #race-screen { display: none; background: #2ecc71; padding: 30px 10px; border-radius: 10px; position: relative; overflow: hidden; border: 4px solid #27ae60; }
-        .track { height: 120px; position: relative; border-bottom: 2px dashed rgba(255,255,255,0.5); margin-bottom: 10px; }
-        .horse-container { position: absolute; bottom: 10px; transition: left 0.05s linear; text-align: center; }
-        .horse-emoji { font-size: 40px; display: block; }
-        .horse-label { background: rgba(0,0,0,0.6); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
-        
-        /* 演出 */
-        .exhausted { opacity: 0.4; filter: grayscale(1); } /* バテた時の演出 */
-        .running { animation: bounce 0.2s infinite alternate; }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
-
-        #log { height: 120px; overflow-y: auto; border: 1px solid #eee; padding: 10px; text-align: left; font-size: 0.9em; background: #fafafa; border-radius: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <title>忍法一覧</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: #f5f5f5;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .meta {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🐎 UMA SIMULATOR</h1>
+<h1>忍法（鞍馬神流）</h1>
 
-    <div id="train-screen">
-        <div class="status-box">
-            <div class="stat-item turn-highlight">残り期間: <span id="turns">15</span> ターン</div>
-            <div class="stat-item">⚡ スピード: <span id="speed" class="stat-val">100</span></div>
-            <div class="stat-item">❤ スタミナ: <span id="stamina" class="stat-val">100</span></div>
-            <div class="stat-item" style="grid-column: 1 / 3;">🔋 余力（体力）: <span id="energy" class="stat-val">100</span></div>
-        </div>
+<div class="grid">
 
-        <div class="btn-group">
-            <button class="btn-speed" onclick="train('speed')">スピード練習</button>
-            <button class="btn-stamina" onclick="train('stamina')">スタミナ練習</button>
-            <button class="btn-rest" onclick="rest()">お休み</button>
-        </div>
+  <div class="card">
+    <div class="title">霧雨（きりさめ）</div>
+    <div class="meta">攻撃忍法 / 間合1 / コスト1</div>
+    <p>接近戦攻撃。成功時ダメージ1。さらに効果を1つ無効化できる。</p>
+  </div>
 
-        <div id="log">トレーニングを重ねて、1500mのレースに備えよう！<br>スピードだけだと途中でバテるぞ。</div>
-        
-        <button id="start-race-btn" class="btn-race" onclick="startRace()" disabled>15ターン終了で出走可能</button>
-    </div>
+  <div class="card">
+    <div class="title">青嵐（せいらん）</div>
+    <div class="meta">攻撃忍法 / 間合2 / コスト2</div>
+    <p>接近戦攻撃。成功時ダメージ1。条件を満たすと追加で1ダメージ。</p>
+  </div>
 
-    <div id="race-screen">
-        <div class="track">
-            <div id="my-horse-box" class="horse-container" style="left: 10%;">
-                <span class="horse-label">あなた</span>
-                <span id="my-horse" class="horse-emoji">🐎</span>
-            </div>
-        </div>
-        <div class="track">
-            <div id="rival-horse-box" class="horse-container" style="left: 10%;">
-                <span class="horse-label">ライバル</span>
-                <span id="rival-horse" class="horse-emoji">🏇</span>
-            </div>
-        </div>
-        <h2 id="race-msg" style="color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.5);"></h2>
-        <button id="retry-btn" onclick="location.reload()" style="display:none; background: white; color: #333; width: 100%;">もう一度育成する</button>
-    </div>
+  <div class="card">
+    <div class="title">五月雨（さみだれ）</div>
+    <div class="meta">攻撃忍法 / 間合1 / コスト2</div>
+    <p>射撃戦攻撃。成功時ダメージ1。さらにもう一度攻撃可能。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">射射（しゃしゃ）</div>
+    <div class="meta">攻撃忍法 / 間合2 / コスト2</div>
+    <p>射撃戦攻撃。成功時ダメージ1。プロット値+1。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">前腕（ぜんわん）</div>
+    <div class="meta">攻撃忍法 / 間合1 / コスト1</div>
+    <p>接近戦攻撃。成功時ダメージ1。回避成功でも追加ダメージ。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">抜討（ぬきうち）</div>
+    <div class="meta">サポート忍法 / コスト1</div>
+    <p>回避判定+2。成功時、反撃可能。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">天狼（てんろう）</div>
+    <div class="meta">サポート忍法 / コスト2</div>
+    <p>命中判定前に使用。ファンブル値をプロット値に変更。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">影縫（かげぬい）</div>
+    <div class="meta">サポート忍法 / コストなし</div>
+    <p>プロット値を他キャラと同値に変更可能（1戦闘1回）。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">返討（かえりうち）</div>
+    <div class="meta">サポート忍法 / コストなし</div>
+    <p>対象にされた時に使用。成功で1ダメージ。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">俄雨（にわかあめ）</div>
+    <div class="meta">サポート忍法 / 間合1 / コスト1</div>
+    <p>条件発動。敵の回避-1＆サポート忍法封じ。</p>
+  </div>
+
+  <div class="card">
+    <div class="title">透視（すかし）</div>
+    <div class="meta">装備忍法 / コストなし</div>
+    <p>生命力1消費で判定+2。</p>
+  </div>
+
 </div>
-
-<script>
-    // --- 初期設定 ---
-    let turns = 15;
-    let speed = 100;
-    let stamina = 100;
-    let energy = 100;
-
-    // ライバルはバランス型
-    const rivalSpeed = 350;
-    const rivalStamina = 350;
-
-    function updateUI() {
-        document.getElementById('turns').innerText = turns;
-        document.getElementById('speed').innerText = speed;
-        document.getElementById('stamina').innerText = stamina;
-        document.getElementById('energy').innerText = energy;
-
-        if (turns <= 0) {
-            document.getElementById('start-race-btn').disabled = false;
-            document.getElementById('start-race-btn').innerText = "いざ、メインレース出走！";
-            const buttons = document.querySelectorAll('.btn-group button');
-            buttons.forEach(btn => btn.disabled = true);
-        }
-    }
-
-    function addLog(msg) {
-        const log = document.getElementById('log');
-        log.innerHTML = `<div>> ${msg}</div>` + log.innerHTML;
-    }
-
-    // --- 育成ロジック ---
-    function train(type) {
-        if (energy < 20) {
-            addLog("<span style='color:red'>体力が足りません！お休みしましょう。</span>");
-            return;
-        }
-        let gain = Math.floor(Math.random() * 15) + 25; // 25〜40上昇
-        if (type === 'speed') {
-            speed += gain;
-            addLog(`⚡スピード練習！ スピードが${gain}上がった！`);
-        } else {
-            stamina += gain;
-            addLog(`❤スタミナ練習！ スタミナが${gain}上がった！`);
-        }
-        energy -= 20;
-        turns--;
-        updateUI();
-    }
-
-    function rest() {
-        energy = Math.min(100, energy + 50);
-        addLog("💤しっかり休んで体力が回復した。");
-        turns--;
-        updateUI();
-    }
-
-    // --- レースロジック（本番） ---
-    function startRace() {
-        document.getElementById('train-screen').style.display = 'none';
-        document.getElementById('race-screen').style.display = 'block';
-        
-        const myBox = document.getElementById('my-horse-box');
-        const rivalBox = document.getElementById('rival-horse-box');
-        const myHorse = document.getElementById('my-horse');
-        const rivalHorse = document.getElementById('rival-horse');
-        const msg = document.getElementById('race-msg');
-
-        myHorse.classList.add('running');
-        rivalHorse.classList.add('running');
-
-        let myPos = 0;
-        let rivalPos = 0;
-        let distanceCovered = 0;
-        const raceLimit = 1500; // レースの長さ
-
-        // レース用スタミナ
-        let curMyStamina = stamina;
-        let curRivalStamina = rivalStamina;
-
-        let raceTimer = setInterval(() => {
-            distanceCovered += 10;
-
-            // 基本スピードを計算
-            let mySpd = speed / 15;
-            let rivalSpd = rivalSpeed / 15;
-
-            // スタミナ消費（速いほど激しく消費）
-            curMyStamina -= (mySpd * 0.12);
-            curRivalStamina -= (rivalSpd * 0.12);
-
-            // バテ判定
-            if (curMyStamina <= 0) {
-                mySpd *= 0.35; // 速度が35%にダウン
-                myBox.classList.add('exhausted');
-                if(distanceCovered % 200 === 0) msg.innerText = "あなたがバテている！";
-            }
-            if (curRivalStamina <= 0) {
-                rivalSpd *= 0.35;
-                rivalBox.classList.add('exhausted');
-            }
-
-            myPos += mySpd;
-            rivalPos += rivalSpd;
-
-            // カメラ演出：二人の差を計算して画面内（10%〜80%の間）で表現
-            let diff = (myPos - rivalPos) / 8;
-            myBox.style.left = (45 + diff) + "%";
-            rivalBox.style.left = (45 - diff) + "%";
-
-            // ゴール判定
-            if (distanceCovered >= raceLimit) {
-                clearInterval(raceTimer);
-                myHorse.classList.remove('running');
-                rivalHorse.classList.remove('running');
-                document.getElementById('retry-btn').style.display = "block";
-
-                if (myPos > rivalPos) {
-                    msg.innerText = "🏆 1着でゴール！おめでとう！";
-                    msg.style.color = "#f1c40f";
-                } else {
-                    msg.innerText = "2着... スタミナ配分が鍵だ。";
-                    msg.style.color = "white";
-                }
-            }
-        }, 50);
-    }
-
-    updateUI(); // 初回表示
-</script>
 
 </body>
 </html>
