@@ -2,177 +2,231 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>忍法一覧（鞍馬神流）</title>
+<title>忍法一覧</title>
+
 <style>
-  body {
-    margin: 0;
-    font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-    background: #1a1a1a;
-    color: #eee;
-  }
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #1a1a1a;
+  color: #fff;
+}
 
-  h1 {
-    text-align: center;
-    padding: 20px;
-    margin: 0;
-    background: #111;
-    border-bottom: 2px solid #444;
-    letter-spacing: 2px;
-  }
+h1 {
+  text-align: center;
+  padding: 15px;
+  margin: 0;
+  background: #111;
+}
 
+.controls {
+  padding: 10px;
+  text-align: center;
+}
+
+input, select {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* グリッド（最大3列） */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 15px;
+}
+
+/* スマホ */
+@media (max-width: 768px) {
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 16px;
-    padding: 20px;
+    grid-template-columns: 1fr;
   }
+}
 
-  .card {
-    background: #2a2a2a;
-    border: 1px solid #555;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    position: relative;
-  }
+.card {
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-  .title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #555;
-    padding-bottom: 4px;
-  }
+.card:hover {
+  transform: scale(1.03);
+}
 
-  .meta {
-    font-size: 13px;
-    margin-bottom: 10px;
-    color: #bbb;
-  }
+.title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
 
-  .section {
-    margin-bottom: 6px;
-    font-size: 13px;
-  }
+/* モーダル */
+.modal {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
 
-  .label {
-    color: #aaa;
-  }
+.modal-content {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+}
 
-  .desc {
-    font-size: 14px;
-    line-height: 1.6;
-    margin-top: 8px;
-  }
-
+.close {
+  float: right;
+  cursor: pointer;
+}
 </style>
 </head>
+
 <body>
 
-<h1>忍法（鞍馬神流・流派忍法）</h1>
+<h1>忍法一覧</h1>
 
-<div class="grid">
-
-<div class="card">
-<div class="title">霧雨（きりさめ）</div>
-<div class="meta">タイプ：攻撃忍法 / 間合：1 / コスト：1</div>
-<div class="section"><span class="label">指定特技：</span>水術、走法</div>
-<div class="desc">
-接近戦攻撃。攻撃が成功すると、目標に接近戦ダメージを1点与える。その後、任意の効果を選び、それを無効にすることができる（その効果が累積する場合、累積した効果すべてで無効にする）。
-</div>
-</div>
-
-<div class="card">
-<div class="title">青嵐（せいらん）</div>
-<div class="meta">タイプ：攻撃忍法 / 間合：2 / コスト：2</div>
-<div class="section"><span class="label">指定特技：</span>走法</div>
-<div class="desc">
-接近戦攻撃。攻撃が成功すると、目標に接近戦ダメージを1点与える。目標のプロット値に関係なく「間合2」以上だった場合、さらに接近戦ダメージを1点与えることができる。
-</div>
+<div class="controls">
+  <input type="text" id="search" placeholder="忍法名で検索">
+  <select id="filter">
+    <option value="">すべて</option>
+    <option value="攻撃">攻撃</option>
+    <option value="サポート">サポート</option>
+    <option value="装備">装備</option>
+  </select>
 </div>
 
-<div class="card">
-<div class="title">五月雨（さみだれ）</div>
-<div class="meta">タイプ：攻撃忍法 / 間合：1 / コスト：2</div>
-<div class="section"><span class="label">指定特技：</span>刀術</div>
-<div class="desc">
-射撃戦攻撃。攻撃が成功すると、目標に射撃戦ダメージを1点与える。使用可能な攻撃忍法があれば、その忍法を使って、攻撃をもう一度行うことができる。
-</div>
+<div class="grid" id="grid"></div>
+
+<!-- モーダル -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">✖</span>
+    <div id="modal-body"></div>
+  </div>
 </div>
 
-<div class="card">
-<div class="title">射射（しゃしゃ）</div>
-<div class="meta">タイプ：攻撃忍法 / 間合：2 / コスト：2</div>
-<div class="section"><span class="label">指定特技：</span>弓術</div>
-<div class="desc">
-射撃戦攻撃。攻撃が成功すると、目標に射撃戦ダメージを1点与える。自分のプロット値を1上昇する。
-</div>
-</div>
+<script>
+const data = [
+{
+name:"霧雨（きりさめ）",
+type:"攻撃",
+meta:"間合1 / コスト1 / 指定特技：水術、走法",
+desc:"接近戦攻撃。攻撃が成功すると、目標に接近戦ダメージを1点与える。その後、任意の効果を選び、それを無効にすることができる（その効果が累積する場合、累積した効果すべてで無効にする）。"
+},
+{
+name:"青嵐（せいらん）",
+type:"攻撃",
+meta:"間合2 / コスト2 / 指定特技：走法",
+desc:"接近戦攻撃。攻撃が成功すると、目標に接近戦ダメージを1点与える。目標のプロット値に関係なく「間合2」以上だった場合、さらに接近戦ダメージを1点与えることができる。"
+},
+{
+name:"五月雨（さみだれ）",
+type:"攻撃",
+meta:"間合1 / コスト2 / 指定特技：刀術",
+desc:"射撃戦攻撃。攻撃が成功すると、目標に射撃戦ダメージを1点与える。使用可能な攻撃忍法があれば、その忍法を使って、攻撃をもう一度行うことができる。"
+},
+{
+name:"射射（しゃしゃ）",
+type:"攻撃",
+meta:"間合2 / コスト2 / 指定特技：弓術",
+desc:"射撃戦攻撃。攻撃が成功すると、目標に射撃戦ダメージを1点与える。自分のプロット値を1上昇する。"
+},
+{
+name:"前腕（ぜんわん）",
+type:"攻撃",
+meta:"間合1 / コスト1 / 指定特技：体術",
+desc:"接近戦攻撃。攻撃が成功すると、目標に接近戦ダメージを1点与える。目標が「回避判定」に成功しても、さらに接近戦ダメージを1点与えることができる。"
+},
+{
+name:"抜討（ぬきうち）",
+type:"サポート",
+meta:"コスト1",
+desc:"自分よりプロット値が高いキャラクターから攻撃を受けるときに使用できる。その攻撃に対する回避判定にプラス2の修正がつく。その判定に成功した場合、使用可能な攻撃忍法があれば、その忍法を使って、攻撃を一度行うことができる。"
+},
+{
+name:"天狼（てんろう）",
+type:"サポート",
+meta:"コスト2 / 指定特技：骨法術",
+desc:"自分の命中判定の前に使用できる。指定特技の判定に成功すると、その攻撃の命中判定のファンブル値は、自分のプロット値と同じ値になる。"
+},
+{
+name:"影縫（かげぬい）",
+type:"サポート",
+meta:"",
+desc:"プロット公開時、自分のプロットを行動順に変更できる。戦闘に参加しているキャラクターを目標に選ぶ。目標のプロット値が自分のプロット値よりも大きい場合、自分のプロット値を目標のプロット値と同じ値に変更する。この忍法は一度の戦闘に一度まで使用できる。"
+},
+{
+name:"返討（かえりうち）",
+type:"サポート",
+meta:"指定特技：気配",
+desc:"ドラマシーン中、誰かが忍法の目標に自分が選ばれたときに使用できる。その忍法の使用者一人を目標に選ぶ。指定特技の判定に成功すると、目標に接近戦ダメージを1点与える。この効果は、戦闘のシーンに登場していなくても使用できる。"
+},
+{
+name:"俄雨（にわかあめ）",
+type:"サポート",
+meta:"間合1 / コスト1 / 指定特技：意気",
+desc:"戦闘中、自分の【生命力】が1点以上失われたときに使用できる。この忍法の間合内にいるキャラクターをすべて対象とする。指定特技の判定に成功すると、そのラウンドの間、自分の攻撃に対して目標が行う回避判定にマイナス1の修正がつき、そのラウンドの間、目標は汎用のサポート忍法を使用できなくなる。"
+},
+{
+name:"透視（すかし）",
+type:"装備",
+meta:"",
+desc:"自分の回避判定、もしくは奥義破り判定のサイコロを振る直前に使用できる。【生命力】を1点消費すると、その判定にプラス2の修正がつく。"
+}
+];
 
-<div class="card">
-<div class="title">前腕（ぜんわん）</div>
-<div class="meta">タイプ：攻撃忍法 / 間合：1 / コスト：1</div>
-<div class="section"><span class="label">指定特技：</span>体術</div>
-<div class="desc">
-接近戦攻撃。攻撃が成功すると、目標に接近戦ダメージを1点与える。目標が「回避判定」に成功しても、さらに接近戦ダメージを1点与えることができる。
-</div>
-</div>
+const grid = document.getElementById("grid");
 
-<div class="card">
-<div class="title">抜討（ぬきうち）</div>
-<div class="meta">タイプ：サポート忍法 / 間合：なし / コスト：1</div>
-<div class="section"><span class="label">指定特技：</span>なし</div>
-<div class="desc">
-自分よりプロット値が高いキャラクターから攻撃を受けるときに使用できる。その攻撃に対する回避判定にプラス2の修正がつく。その判定に成功した場合、使用可能な攻撃忍法があれば、その忍法を使って、攻撃を一度行うことができる。
-</div>
-</div>
+function render() {
+  const search = document.getElementById("search").value;
+  const filter = document.getElementById("filter").value;
 
-<div class="card">
-<div class="title">天狼（てんろう）</div>
-<div class="meta">タイプ：サポート忍法 / 間合：なし / コスト：2</div>
-<div class="section"><span class="label">指定特技：</span>骨法術</div>
-<div class="desc">
-自分の命中判定の前に使用できる。指定特技の判定に成功すると、その攻撃の命中判定のファンブル値は、自分のプロット値と同じ値になる。
-</div>
-</div>
+  grid.innerHTML = "";
 
-<div class="card">
-<div class="title">影縫（かげぬい）</div>
-<div class="meta">タイプ：サポート忍法 / 間合：なし / コスト：なし</div>
-<div class="section"><span class="label">指定特技：</span>なし</div>
-<div class="desc">
-プロット公開時、自分のプロットを行動順に変更できる。戦闘に参加しているキャラクターを目標に選ぶ。目標のプロット値が自分のプロット値よりも大きい場合、自分のプロット値を目標のプロット値と同じ値に変更する。この忍法は一度の戦闘に一度まで使用できる。
-</div>
-</div>
+  data
+    .filter(d => d.name.includes(search))
+    .filter(d => !filter || d.type === filter)
+    .forEach(d => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="title">${d.name}</div>
+        <div>${d.type}</div>
+      `;
+      card.onclick = () => openModal(d);
+      grid.appendChild(card);
+    });
+}
 
-<div class="card">
-<div class="title">返討（かえりうち）</div>
-<div class="meta">タイプ：サポート忍法 / 間合：なし / コスト：なし</div>
-<div class="section"><span class="label">指定特技：</span>気配</div>
-<div class="desc">
-ドラマシーン中、誰かが忍法の目標に自分が選ばれたときに使用できる。その忍法の使用者一人を目標に選ぶ。指定特技の判定に成功すると、目標に接近戦ダメージを1点与える。この効果は、戦闘のシーンに登場していなくても使用できる。
-</div>
-</div>
+function openModal(d) {
+  document.getElementById("modal-body").innerHTML = `
+    <h2>${d.name}</h2>
+    <p><b>タイプ：</b>${d.type}</p>
+    <p>${d.meta}</p>
+    <p>${d.desc}</p>
+  `;
+  document.getElementById("modal").style.display = "flex";
+}
 
-<div class="card">
-<div class="title">俄雨（にわかあめ）</div>
-<div class="meta">タイプ：サポート忍法 / 間合：1 / コスト：1</div>
-<div class="section"><span class="label">指定特技：</span>意気</div>
-<div class="desc">
-戦闘中、自分の【生命力】が1点以上失われたときに使用できる。この忍法の間合内にいるキャラクターをすべて対象とする。指定特技の判定に成功すると、そのラウンドの間、自分の攻撃に対して目標が行う回避判定にマイナス1の修正がつき、そのラウンドの間、目標は汎用のサポート忍法を使用できなくなる。
-</div>
-</div>
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
 
-<div class="card">
-<div class="title">透視（すかし）</div>
-<div class="meta">タイプ：装備忍法 / 間合：なし / コスト：なし</div>
-<div class="section"><span class="label">指定特技：</span>なし</div>
-<div class="desc">
-自分の回避判定、もしくは奥義破り判定のサイコロを振る直前に使用できる。【生命力】を1点消費すると、その判定にプラス2の修正がつく。
-</div>
-</div>
+document.getElementById("search").addEventListener("input", render);
+document.getElementById("filter").addEventListener("change", render);
 
-</div>
+render();
+</script>
 
 </body>
 </html>
