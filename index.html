@@ -19,6 +19,12 @@ h1 {
   background: #111;
 }
 
+/* 幅制限 */
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
 .controls {
   padding: 10px;
   text-align: center;
@@ -50,12 +56,6 @@ input, select {
   background: #2a2a2a;
   padding: 15px;
   border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.card:hover {
-  transform: scale(1.03);
 }
 
 .title {
@@ -63,30 +63,15 @@ input, select {
   margin-bottom: 5px;
 }
 
-/* モーダル */
-.modal {
-  display: none;
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
+.meta {
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 8px;
 }
 
-.modal-content {
-  background: #222;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
-}
-
-.close {
-  float: right;
-  cursor: pointer;
+.desc {
+  font-size: 14px;
+  line-height: 1.6;
 }
 </style>
 </head>
@@ -94,6 +79,8 @@ input, select {
 <body>
 
 <h1>忍法一覧</h1>
+
+<div class="container">
 
 <div class="controls">
   <input type="text" id="search" placeholder="忍法名で検索">
@@ -107,12 +94,6 @@ input, select {
 
 <div class="grid" id="grid"></div>
 
-<!-- モーダル -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">✖</span>
-    <div id="modal-body"></div>
-  </div>
 </div>
 
 <script>
@@ -201,25 +182,11 @@ function render() {
       card.className = "card";
       card.innerHTML = `
         <div class="title">${d.name}</div>
-        <div>${d.type}</div>
+        <div class="meta">${d.type} / ${d.meta}</div>
+        <div class="desc">${d.desc}</div>
       `;
-      card.onclick = () => openModal(d);
       grid.appendChild(card);
     });
-}
-
-function openModal(d) {
-  document.getElementById("modal-body").innerHTML = `
-    <h2>${d.name}</h2>
-    <p><b>タイプ：</b>${d.type}</p>
-    <p>${d.meta}</p>
-    <p>${d.desc}</p>
-  `;
-  document.getElementById("modal").style.display = "flex";
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
 }
 
 document.getElementById("search").addEventListener("input", render);
