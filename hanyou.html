@@ -565,7 +565,7 @@ function getFilteredData() {
 
   return data
     .filter(d => d.name.toLowerCase().includes(search))
-    .filter(d => !filter || d.type === filter);
+    .filter(d => !filter || d.type.includes(filter));
 }
 
 function render() {
