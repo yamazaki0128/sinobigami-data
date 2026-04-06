@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>シノビガミ徹底攻略-鞍馬神流</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+/* タイトル */
+h1 {
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+  background: #111;
+}
+.container h2 {
+    text-align: center;
+    background-color: #1f1f1f;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 10px;
+}
+/* ===== メニュー ===== */
+.menu {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 15px 0;
+  background: #1a1a1a;
+  border-bottom: 1px solid #444;
+}
+
+/* メニューアイテム（枠線だけ） */
+.menu-item {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 14px;
+  border: 1px solid #666;
+  background: transparent;
+  transition: 0.2s;
+}
+
+/* ホバー */
+.menu-item:hover {
+  border-color: #aaa;
+  background: #333;
+}
+
+/* ===== コンテンツ ===== */
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.controls {
+  padding: 10px;
+  text-align: center;
+}
+
+input, select {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* ===== 追加：サブメニューのスタイル ===== */
+.submenu {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.sub-item {
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  border: 1px solid #555;
+  background: #333;
+  color: #ccc;
+  transition: 0.2s;
+}
+
+.sub-item:hover, .sub-item.active {
+  border-color: #aaa;
+  background: #444;
+  color: #fff;
+}
+
+/* グリッド */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 一覧カード */
+.card {
+  min-height: 180px;
+  overflow: hidden;
+  padding: 15px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #2e2e2e, #1f1f1f);
+  border: 1px solid #666;
+  transition: 0.2s;
+}
+
+/* テキスト */
+.title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1.1em;
+  border-bottom: 1px solid;
+  padding-bottom: 5px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 8px;
+}
+
+.desc {
+  font-size: 14px;
+  line-height: 1.6;
+  max-height: 120px;
+  overflow: auto;
+}
+
+/* ページネーション */
+.pagination {
+  text-align: center;
+  padding: 10px;
+}
+
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>
+</head>
+
+<body>
+
+<h1>鞍馬神流</h1>
+
+<div class="menu">
+  <div class="menu-item general" onclick="location.href='hanyou.html'">汎用忍法</div>
+  <div class="menu-item shiba" onclick="location.href='shiba.html'">斜歯忍軍</div>
+  <div class="menu-item kurama" onclick="location.href='kurama.html'">鞍馬神流</div>
+  <div class="menu-item hagure" onclick="location.href='hagure.html'">ハグレモノ</div>
+  <div class="menu-item hirasaka" onclick="location.href='hirasaka.html'">比良坂機関</div>
+  <div class="menu-item gakuen" onclick="location.href='gakuen.html'">私立御斎学園</div>
+  <div class="menu-item kettou" onclick="location.href='kettou.html'">隠忍の血統</div>
+  <div class="menu-item koryu" onclick="location.href='koryu.html'">古流忍法</div>
+</div>
+
+<div class="container">
+
+<div class="controls">
+  <input type="text" id="search" placeholder="忍法名で検索">
+  <select id="filter">
+    <option value="">すべて</option>
+    <option value="攻撃">攻撃</option>
+    <option value="サポート">サポート</option>
+    <option value="装備">装備</option>
+  </select>
+  
+  <div class="submenu">
+    <div class="sub-item active" onclick="setSubCategory(this, '')">●すべて</div>
+    <div class="sub-item" onclick="setSubCategory(this, '流派')">●流派</div>
+    <div class="sub-item" onclick="setSubCategory(this, '秘伝')">●秘伝</div>
+    <div class="sub-item" onclick="setSubCategory(this, '廻鴉')">●廻鴉</div>
+    <div class="sub-item" onclick="setSubCategory(this, 'バヨネット')">●バヨネット</div>
+    <div class="sub-item" onclick="setSubCategory(this, '魔王流')">●魔王流</div>
+    <div class="sub-item" onclick="setSubCategory(this, '蓮華王拳')">●蓮華王拳</div>
+    <div class="sub-item" onclick="setSubCategory(this, '密蔵番')">●密蔵番</div>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="pagination">
+  <button id="prev">前へ</button>
+  <span id="pageInfo"></span>
+  <button id="next">次へ</button>
+</div>
+
+</div>
+
+<script>
+const ITEMS_PER_PAGE = 12;
+let currentPage = 1;
+let currentSubCategory = ''; // 追加：選択中のサブメニュー属性
+
+const data = [
+  //　流派忍法
+{
+    name:"時雨（しぐれ）",
+    type:"攻撃",
+    category:"流派",
+    meta:"指定特技：砲術 / 間合2 / コスト1",
+    desc:"射撃戦。間合内の好きなキャラクターを二人まで目標にできる。攻撃が成功すると、目標に射撃戦ダメージを1点与えることができる。"
+  },
+  {
+    name:"春雷（しゅんらい）",
+    type:"攻撃",
+    category:"流派",
+    meta:"指定特技：骨法術 / 間合1 / コスト2",
+    desc:"接近戦。命中判定が成功すると、さらに修得している別の特技で判定を一回行う。両方の判定に成功すると、使用者はこの忍法の指定特技か、その判定に使用した特技か好きな方を選ぶ（いずれかの判定に失敗すると、命中判定に失敗したものとして扱う）。目標はその特技で回避判定を行わなければならない。攻撃が成功すると、目標に接近戦ダメージを2点与えることができる。"
+  },
+  {
+    name:"夕凪（ゆうなぎ）",
+    type:"攻撃",
+    category:"流派",
+    meta:"指定特技：手裏剣術 / 間合0 / コストなし",
+    desc:"接近戦。攻撃が成功すると、目標に接近戦ダメージを1点与えることができる。この攻撃は、自分と同じプロット値に複数のキャラクターがいて、戦闘攻撃の処理が発生する場合、同時攻撃の処理の前に、先に攻撃できる。このとき、自分以外のキャラクターが【速攻】や【夕凪】など、同様の効果を使った場合、その忍法の指定特技の判定でもっとも達成値の高かった（※画像では『だった』と記載）キャラクター一人だけ、同時攻撃より先に攻撃を行う効果が発生する（達成値が二人以上いる場合、効果は発生しない）。"
+  },
+  {
+    name:"神槍（しんそう）",
+    type:"攻撃",
+    category:"流派",
+    meta:"指定特技：手裏剣術 / 間合3 / コスト1",
+    desc:"射撃戦。この攻撃は、自分とのプロット値の差が0や1のキャラクターを目標に選ぶことはできない。攻撃が成功すると、目標に射撃戦ダメージを2点与えることができる。"
+  },
+  {
+    name:"影法師（かげほうし）",
+    type:"サポート",
+    category:"流派",
+    meta:"指定特技：歩法 / 間合なし / コスト2",
+    desc:"「プロット」時、自分のプロットを行う前に使用できる。戦闘に参加している好きなキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、そのラウンドはプロットを行わず、プロット公開後、自動的に自分のプロット値は、目標のプロットしたサイコロの目と同じになる。そのラウンドに目標が【影法師】を使用していた場合、自分と目標は通常通りプロットを行う（【影法師】の効果は失われる）。そのラウンドに目標が複数のプロットを行っていた場合、目標のプロット公開後、そのプロットしたサイコロの中からランダムに一つを選ぶこと。"
+  },
+  {
+    name:"禹歩（うほ）",
+    type:"サポート",
+    category:"流派",
+    meta:"指定特技：歩法 / 間合なし / コスト3",
+    desc:"自分が誰かからの攻撃によって射撃戦ダメージを受けたときに使用できる。攻撃を行ったキャラクターを目標に選ぶ。指定特技の判定に成功すると、自分が受けた射撃戦ダメージと等しい値だけ、目標に射撃戦ダメージを与える。"
+  },
+  {
+    name:"飛燕（ひえん）",
+    type:"サポート",
+    category:"流派",
+    meta:"指定特技：飛術 / 間合なし / コスト2",
+    desc:"ラウンドの終了時、同じプロット値に自分以外の誰もいなければ使用できる。【生命力】を1点消費して、指定特技の判定に成功すると、もう一度攻撃できる（この忍法を使用する者が複数いた場合、プロット値に関係なく、判定の達成値の高い者から攻撃を行う）。"
+  },
+  {
+    name:"陽炎（かげろう）",
+    type:"サポート",
+    category:"流派",
+    meta:"指定特技：刀術 / 間合なし / コスト1",
+    desc:"自分の命中判定の前に使用できる。指定特技の判定に成功したら、その攻撃の回避判定にマイナス2の修正がつく。"
+  },
+  {
+    name:"血断（けつだん）",
+    type:"装備",
+    category:"流派",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"自分の命中判定が成功し、相手の回避判定が失敗したときに使用できる。自分の【生命力】を1点消費する（最大1点）と、攻撃のダメージを1点上昇する。この効果によって上昇するダメージは、各攻撃忍法の最初に書いてあるもののみである。"
+  },
+  {
+    name:"降魔（ごうま）",
+    type:"装備",
+    category:"流派",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"隠忍の血統の流派忍法や妖魔忍法を修得しているキャラクターへの攻撃が成功すると、通常の攻撃の効果に加え、射撃戦ダメージを1点与えることができる。この追加の射撃戦ダメージによる【生命力】の減少は、【絶対防御】で軽減できない。"
+  },
+  {
+    name:"後の先（ごのせん）",
+    type:"装備",
+    category:"流派",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"自分よりプロット値が高いキャラクターへの攻撃が成功すると、通常の攻撃の効果に加え、射撃戦ダメージを1点与えることができる。"
+  },
+  {
+    name:"先の先（せんのせん）",
+    type:"装備",
+    category:"流派",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"自分よりプロット値が低いキャラクターへの攻撃が成功すると、通常の攻撃の効果に加え、射撃戦ダメージを1点与えることができる。"
+  },
+
+  //　秘伝忍法
+  {
+    name:"残雪（ざんせつ）",
+    type:"攻撃",
+    category:"秘伝",
+    meta:"指定特技：走法 / 間合1 / コスト2",
+    desc:"接近戦。この攻撃は、自分よりプロット値が高いキャラクターを目標に選ぶことができない。攻撃が成功すると、目標に接近戦ダメージを1点与えることができる。また、この攻撃による【生命力】の減少を【絶対防御】によって軽減することはできない。"
+  },
+  {
+    name:"炎天（えんてん）",
+    type:"サポート",
+    category:"秘伝",
+    meta:"指定特技：歩法 / 間合なし / コスト2",
+    desc:"戦闘中、自分の手番に使用できる。自分よりプロット値の低いキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、そのラウンドの間、目標は命中判定にマイナス2の修正を受ける。"
+  },
+  {
+    name:"狭霧（さぎり）",
+    type:"装備",
+    category:"秘伝",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"このキャラクターの攻撃に対する回避判定にマイナス1の修正がつく。"
+  },
+  {
+    name:"凩（こがらし）",
+    type:"サポート",
+    category:"秘伝",
+    meta:"指定特技：骨法術 / 間合なし / コスト2",
+    desc:"自分が誰かの攻撃を回避したときに使用できる。攻撃を行ったキャラクターを目標に選ぶ。指定特技の判定に成功すると、そのラウンドの間、目標は回避判定にマイナス2の修正を受ける。"
+  },
+  {
+    name:"村雨（むらさめ）",
+    type:"装備",
+    category:"秘伝",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"このキャラクターの攻撃に対して回避判定を行う場合、ファンブル値が1上昇する。この忍法は中忍以上でないと修得できない。"
+  },
+  {
+    name:"十六夜（いざよい）",
+    type:"攻撃",
+    category:"秘伝",
+    meta:"指定特技：刀術 / 間合1 / コスト2",
+    desc:"接近戦。攻撃が成功すると、目標に接近戦ダメージを1点と「呪い」の変調を与えることができる。ただし、すでに「呪い」の変調を受けているキャラクターに、この忍法によってさらに「呪い」を与えることはできない。この忍法は中忍頭以上でないと修得できない。"
+  },
+  {
+    name:"日輪（ひのわ）",
+    type:"サポート",
+    category:"秘伝",
+    meta:"指定特技：手裏剣 / 間合なし / コストなし",
+    desc:"自分がシーンプレイヤー時のドラマシーンに使用できる。好きなキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、目標が隠忍の血統の流派忍法や妖魔忍法を修得していた場合、射撃戦ダメージを1点与える。この忍法は中忍頭以上でないと修得できない。"
+  },
+  {
+    name:"朧（おぼろ）",
+    type:"サポート",
+    category:"秘伝",
+    meta:"指定特技：身体操術 / 間合なし / コスト3",
+    desc:"自分が判定に失敗したときに使用できる（ファンブル時は使用できない）。指定特技の判定に成功すると、その判定を成功にできる。ただし、戦闘シーンでこの忍法を使用すると、判定に成功した処理の後に逆風を受け、ファンブルエリアに移動する（プロット時は除く）。ドラマシーンでこの忍法を使用するとファンブル表を一回振らなければいけない。この忍法は中忍頭以上でないと修得できない。"
+  },
+  {
+    name:"磐（いわお）",
+    type:"装備",
+    category:"秘伝",
+    meta:"指定特技：なし / 間合なし / コストなし",
+    desc:"追加の【生命力】とそのスロットを1点獲得する。また、このキャラクターに対して命中判定を行い、ファンブルしたキャラクターは、接近戦ダメージを1点受ける。この忍法は中忍頭以上でないと修得できない。"
+  },
+  {
+    name:"雪崩（なだれ）",
+    type:"サポート",
+    category:"秘伝",
+    meta:"指定特技：怪力 / 間合なし / コスト3",
+    desc:"戦闘中、自分が攻撃する代わりに使用できる。指定特技の判定に成功すると、戦場をランダムに変更し、体術からランダムに特技一つを選ぶ。戦闘に参加しているキャラクターは、全員その特技の判定を行い、失敗した者は射撃戦ダメージ2点を受ける。この忍法は上忍以上でないと修得できない。"
+  },
+  {
+    name:"白夜（びゃくや）",
+    type:"攻撃",
+    category:"秘伝",
+    meta:"指定特技：手裏剣術 / 間合1 / コスト1",
+    desc:"接近戦。攻撃が成功すると、目標に接近戦ダメージを2点与えることができる。もし、目標が体術以外の特技で回避判定を行う場合、回避判定にマイナス4の修正がつく。この忍法は上忍以上でないと修得できない。"
+  },
+  {
+    name:"月虹（げっこう）",
+    type:"攻撃",
+    category:"秘伝",
+    meta:"指定特技：好きな体術 / 間合1 / コストなし",
+    desc:"接近戦。攻撃が成功すると、目標に接近戦ダメージを3点与えることができる。この忍法は上忍頭以上でないと修得できない。"
+  }
+
+
+];
+
+const grid = document.getElementById("grid");
+
+// 追加：サブメニュー切り替え関数
+function setSubCategory(element, cat) {
+  currentSubCategory = cat;
+  currentPage = 1; // ページを1に戻す
+  
+  // ボタンのアクティブ表示切り替え
+  document.querySelectorAll('.sub-item').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  element.classList.add('active');
+  
+  render();
+}
+
+function getFilteredData() {
+  const search = document.getElementById("search").value.toLowerCase();
+  const filter = document.getElementById("filter").value;
+
+  return data
+    .filter(d =>
+      d.name.toLowerCase().includes(search) ||
+      d.desc.toLowerCase().includes(search)
+    )
+    .filter(d => !filter || d.type.includes(filter))
+    // 追加：サブメニューによる絞り込み（空文字の場合は全表示）
+    .filter(d => !currentSubCategory || d.category === currentSubCategory);
+}
+
+function render() {
+  const filtered = getFilteredData();
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pageData = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  grid.innerHTML = "";
+
+  if (filtered.length === 0) {
+    grid.innerHTML = "<p style='text-align:center;'>該当する忍法がありません</p>";
+    document.getElementById("pageInfo").textContent = "";
+    document.getElementById("prev").disabled = true;
+    document.getElementById("next").disabled = true;
+    return;
+  }
+
+  pageData.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "card";
+    
+    // サブカテゴリーの表示も追加したい場合は、以下のmeta部分を調整してください
+    card.innerHTML = `
+      <div class="title">${d.name}</div>
+      <div class="meta">${d.category || '未設定'} / ${d.type} / ${d.meta}</div>
+      <div class="desc">${d.desc}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById("pageInfo").textContent =
+    `${currentPage} / ${totalPages}`;
+
+  document.getElementById("prev").disabled = currentPage === 1;
+  document.getElementById("next").disabled = currentPage === totalPages;
+}
+
+document.getElementById("search").addEventListener("input", () => {
+  currentPage = 1;
+  render();
+});
+
+document.getElementById("filter").addEventListener("change", () => {
+  currentPage = 1;
+  render();
+});
+
+document.getElementById("prev").addEventListener("click", () => {
+  currentPage--;
+  render();
+});
+
+document.getElementById("next").addEventListener("click", () => {
+  currentPage++;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
