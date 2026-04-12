@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>シノビガミ徹底攻略-ハグレモノ</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+/* タイトル */
+h1 {
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+  background: #111;
+}
+.container h2 {
+    text-align: center;
+    background-color: #1f1f1f;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 10px;
+}
+/* ===== メニュー ===== */
+.menu {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 15px 0;
+  background: #1a1a1a;
+  border-bottom: 1px solid #444;
+}
+
+/* メニューアイテム（枠線だけ） */
+.menu-item {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 14px;
+  border: 1px solid #666;
+  background: transparent;
+  transition: 0.2s;
+}
+
+/* ホバー */
+.menu-item:hover {
+  border-color: #aaa;
+  background: #333;
+}
+
+/* ===== コンテンツ ===== */
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.controls {
+  padding: 10px;
+  text-align: center;
+}
+
+input, select {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* ===== 追加：サブメニューのスタイル ===== */
+.submenu {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.sub-item {
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  border: 1px solid #555;
+  background: #333;
+  color: #ccc;
+  transition: 0.2s;
+}
+
+.sub-item:hover, .sub-item.active {
+  border-color: #aaa;
+  background: #444;
+  color: #fff;
+}
+
+/* グリッド */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 一覧カード */
+.card {
+  min-height: 180px;
+  overflow: hidden;
+  padding: 15px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #2e2e2e, #1f1f1f);
+  border: 1px solid #666;
+  transition: 0.2s;
+}
+
+/* テキスト */
+.title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1.1em;
+  border-bottom: 1px solid;
+  padding-bottom: 5px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 8px;
+}
+
+.desc {
+  font-size: 14px;
+  line-height: 1.6;
+  max-height: 120px;
+  overflow: auto;
+}
+
+/* ページネーション */
+.pagination {
+  text-align: center;
+  padding: 10px;
+}
+
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>
+</head>
+
+<body>
+
+<h1>鞍馬神流</h1>
+
+<div class="menu">
+  <div class="menu-item general" onclick="location.href='index.html'">HOME</div>
+  <div class="menu-item general" onclick="location.href='hanyou.html'">汎用忍法</div>
+  <div class="menu-item hasuba" onclick="location.href='hasuba.html'">斜歯忍軍</div>
+  <div class="menu-item kurama" onclick="location.href='kurama.html'">鞍馬神流</div>
+  <div class="menu-item hagure" onclick="location.href='hagure.html'">ハグレモノ</div>
+  <div class="menu-item hirasaka" onclick="location.href='hirasaka.html'">比良坂機関</div>
+  <div class="menu-item gakuen" onclick="location.href='gakuen.html'">私立御斎学園</div>
+  <div class="menu-item kettou" onclick="location.href='kettou.html'">隠忍の血統</div>
+  <div class="menu-item koryu" onclick="location.href='koryu.html'">古流忍法</div>
+</div>
+
+<div class="container">
+
+<div class="controls">
+  <input type="text" id="search" placeholder="忍法名で検索">
+  <select id="filter">
+    <option value="">すべて</option>
+    <option value="攻撃">攻撃</option>
+    <option value="サポート">サポート</option>
+    <option value="装備">装備</option>
+  </select>
+  
+  <div class="submenu">
+    <div class="sub-item active" onclick="setSubCategory(this, '')">●すべて</div>
+    <div class="sub-item" onclick="setSubCategory(this, '流派')">●流派</div>
+    <div class="sub-item" onclick="setSubCategory(this, '秘伝')">●秘伝</div>
+    <div class="sub-item" onclick="setSubCategory(this, 'NO.9')">●NO.9</div>
+    <div class="sub-item" onclick="setSubCategory(this, '世界忍者連合')">●世界忍者連合</div>
+    <div class="sub-item" onclick="setSubCategory(this, '影絵座')">●影絵座</div>
+    <div class="sub-item" onclick="setSubCategory(this, '不知火')">●不知火</div>
+    <div class="sub-item" onclick="setSubCategory(this, '咎眼流')">●咎眼流</div>
+    <div class="sub-item" onclick="setSubCategory(this, 'ブレーメン')">●ブレーメン</div>
+    <div class="sub-item" onclick="setSubCategory(this, '屍衣')">●屍衣</div>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="pagination">
+  <button id="prev">前へ</button>
+  <span id="pageInfo"></span>
+  <button id="next">次へ</button>
+</div>
+
+</div>
+
+<script>
+const ITEMS_PER_PAGE = 12;
+let currentPage = 1;
+let currentSubCategory = ''; // 追加：選択中のサブメニュー属性
+
+const data = [
+{
+    name:"鳳凰（ひのとり）",
+    type:"攻撃忍法",
+    category:"流派",
+    meta:"間合 6 / コスト 2 / 指定特技：火術",
+    desc:"接近戦。この攻撃は、対象の【生命力】が3点以上でないと行うことができない。攻撃が成功すると、目標に接近戦ダメージを2点与えることができる。"
+},
+{
+    name:"水霊（みずち）",
+    type:"攻撃忍法",
+    category:"流派",
+    meta:"間合 2 / コスト なし / 指定特技：水術",
+    desc:"射撃戦。攻撃が成功すると、目標に射撃戦ダメージを1点与えることができる。もし、自分が「水中」の戦場で戦っているなら、さらに接近戦ダメージを1点与えることができる。"
+},
+{
+    name:"土竜吼（どりゅうこう）",
+    type:"攻撃忍法",
+    category:"流派",
+    meta:"間合 2 / コスト 2 / 指定特技：掘削術",
+    desc:"接近戦。攻撃が成功すると、目標に接近戦ダメージを1点与える。目標のいるプロット値が自分のプロット値より低い場合、そのプロット値のキャラクターは一度このラウンドに回避判定を行っていても、もう一度回避判定を行うことができる（ただし、「クリティカルヒット」や「範囲攻撃」の奥義は使用できない）。"
+},
+{
+    name:"爪撃（そうが）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 なし / コスト 1 / 指定特技：針術",
+    desc:"誰かが奥義を使用したとき、その奥義の奥義破り判定に成功すると使用できる。敵の使用者を目標に選ぶ。指定特技の判定に成功すると、目標に接近戦ダメージを1点与えることができる。"
+},
+{
+    name:"不意打ち（ふいうち）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 なし / コスト なし / 指定特技：仕込み",
+    desc:"自分がシーンプレイヤー時のドラマシーンに使用できる。好きなキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、目標に接近戦ダメージを1点与えることができる。この忍法は、同一セッション中に一度でも使用した相手には二度と効果をもたらさない。"
+},
+{
+    name:"布砦（ぬのとりで）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 なし / コスト 3 / 指定特技：衣装術",
+    desc:"誰かが自分に対して攻撃を行おうとしたときに使用できる。攻撃を行おうとした者を目標に選ぶ。指定特技の判定に成功すると、目標の命中判定のファンブル値を2上昇させることができる。"
+},
+{
+    name:"闇蜘蛛（やみぐも）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 2 / コスト 5 / 指定特技：縄術",
+    desc:"戦闘中、自分が攻撃する代わりに使用できる。この忍法の間合内にいるキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、目標に射撃戦ダメージを1点与えることができる。ただし、この忍法によってダメージを受けたことで、その特技分野は使用不能になる。"
+},
+{
+    name:"惨撃（ざんげき）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 なし / コスト 1 / 指定特技：拷問術",
+    desc:"自分の命中判定が成功し、相手の回避判定が失敗したときに使用できる。指定特技の判定に成功し、自分の好きな忍具を一つ消費すると、その攻撃によるダメージを1点上昇させることができる（最大1点）。この効果によって上昇するダメージは、各攻撃忍法の最初に書いてあるもののみである。"
+},
+{
+    name:"武器破壊（ぶきはかい）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 なし / コスト 2 / 指定特技：壊器術",
+    desc:"自分の攻撃が成功し、相手にダメージを与えたときに使用できる。その攻撃の目標の中から一人を目標に選ぶ。指定特技の判定に成功すると、その目標は命中判定にマイナス2の修正を受ける。この効果は累積しない。"
+},
+{
+    name:"奈落（ならく）",
+    type:"サポート忍法",
+    category:"流派",
+    meta:"間合 なし / コスト 2 / 指定特技：掘削術",
+    desc:"「プロット」時に使用できる。指定特技の判定に成功すると、自分のプロットとは別に、「奈落」のプロットを行う。プロットを公開したタイミングで、「奈落」と同じプロット値のキャラクター全員は【掘削術】による判定を行う。失敗したキャラクターは逆凪となり、ファンブルエリアへ移動する。"
+},
+{
+    name:"機忍（きにん）",
+    type:"装備忍法",
+    category:"流派",
+    meta:"間合 なし / コスト なし / 指定特技：なし",
+    desc:"斜歯忍軍やその下位流派以外の流派忍法のサポート忍法を修得できるようになる（秘伝忍法は修得できない）。ただし、その忍法の指定特技は【絡繰術】となり、コストは1上昇する（なしのものは1になる）。"
+},
+{
+    name:"魔界工学（まかいこうがく）",
+    type:"装備忍法",
+    category:"流派",
+    meta:"間合 なし / コスト なし / 指定特技：なし",
+    desc:"自分が行為判定を行うときに何かの特技で代用する場合、器術・体術・忍術・謀術・戦術・妖術の分野の特技で代用できるものとして扱う。例えばキャラクターが忍術分野の特技で代用しているなら、謀術分野の特技で代用しているものとして扱う。"
+}
+
+];
+
+const grid = document.getElementById("grid");
+
+// 追加：サブメニュー切り替え関数
+function setSubCategory(element, cat) {
+  currentSubCategory = cat;
+  currentPage = 1; // ページを1に戻す
+  
+  // ボタンのアクティブ表示切り替え
+  document.querySelectorAll('.sub-item').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  element.classList.add('active');
+  
+  render();
+}
+
+function getFilteredData() {
+  const search = document.getElementById("search").value.toLowerCase();
+  const filter = document.getElementById("filter").value;
+
+  return data
+    .filter(d =>
+      d.name.toLowerCase().includes(search) ||
+      d.desc.toLowerCase().includes(search)
+    )
+    .filter(d => !filter || d.type.includes(filter))
+    // 追加：サブメニューによる絞り込み（空文字の場合は全表示）
+    .filter(d => !currentSubCategory || d.category === currentSubCategory);
+}
+
+function render() {
+  const filtered = getFilteredData();
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pageData = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  grid.innerHTML = "";
+
+  if (filtered.length === 0) {
+    grid.innerHTML = "<p style='text-align:center;'>該当する忍法がありません</p>";
+    document.getElementById("pageInfo").textContent = "";
+    document.getElementById("prev").disabled = true;
+    document.getElementById("next").disabled = true;
+    return;
+  }
+
+  pageData.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "card";
+    
+    // サブカテゴリーの表示も追加したい場合は、以下のmeta部分を調整してください
+    card.innerHTML = `
+      <div class="title">${d.name}</div>
+      <div class="meta">${d.category || '未設定'} / ${d.type} / ${d.meta}</div>
+      <div class="desc">${d.desc}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById("pageInfo").textContent =
+    `${currentPage} / ${totalPages}`;
+
+  document.getElementById("prev").disabled = currentPage === 1;
+  document.getElementById("next").disabled = currentPage === totalPages;
+}
+
+document.getElementById("search").addEventListener("input", () => {
+  currentPage = 1;
+  render();
+});
+
+document.getElementById("filter").addEventListener("change", () => {
+  currentPage = 1;
+  render();
+});
+
+document.getElementById("prev").addEventListener("click", () => {
+  currentPage--;
+  render();
+});
+
+document.getElementById("next").addEventListener("click", () => {
+  currentPage++;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
