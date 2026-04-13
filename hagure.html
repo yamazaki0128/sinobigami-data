@@ -2,6 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="other.css" rel="stylesheet" type="text/css">
 <title>シノビガミ徹底攻略-ハグレモノ</title>
 
 <style>
@@ -10,6 +12,7 @@ body {
   font-family: sans-serif;
   background: #2a2a2a;
   color: #fff;
+  line-height: 1.5;
 }
 
 /* タイトル */
@@ -18,6 +21,7 @@ h1 {
   padding: 20px 0;
   margin: 0;
   background: #111;
+  font-size: 24px;
 }
 .container h2 {
     text-align: center;
@@ -26,15 +30,27 @@ h1 {
     border: 1px solid;
     border-radius: 10px;
 }
-/* ===== メニュー ===== */
+/* ===== メニュー（修正箇所） ===== */
 .menu {
   display: flex;
-  justify-content: center;
+  justify-content: center; 
   overflow-x: auto;
+  /* スムーズなスクロール（iOS用） */
+  -webkit-overflow-scrolling: touch; 
   gap: 10px;
-  padding: 15px 0;
+  /* 左右にパディングを入れることで、端のアイテムが壁に張り付くのを防ぐ */
+  padding: 15px 20px; 
   background: #1a1a1a;
   border-bottom: 1px solid #444;
+}
+
+/* スクロールバーの見た目を少し整える（任意） */
+.menu::-webkit-scrollbar {
+  height: 4px;
+}
+.menu::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
 }
 
 /* メニューアイテム（枠線だけ） */
@@ -68,13 +84,14 @@ h1 {
 }
 
 input, select {
-  padding: 8px;
+  padding: 10px;
   margin: 5px;
   border-radius: 6px;
   border: none;
+  font-size: 16px; /* 入力しやすく大きく */
 }
 
-/* ===== 追加：サブメニューのスタイル ===== */
+/* ===== サブメニューのスタイル ===== */
 .submenu {
   display: flex;
   justify-content: center;
@@ -84,10 +101,10 @@ input, select {
 }
 
 .sub-item {
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   border: 1px solid #555;
   background: #333;
   color: #ccc;
@@ -108,12 +125,6 @@ input, select {
   padding: 15px;
 }
 
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* 一覧カード */
 .card {
   min-height: 180px;
@@ -132,6 +143,7 @@ input, select {
   font-size: 1.1em;
   border-bottom: 1px solid;
   padding-bottom: 5px;
+  color: #ffda79; /* タイトルを見やすく */
 }
 
 .meta {
@@ -143,28 +155,79 @@ input, select {
 .desc {
   font-size: 14px;
   line-height: 1.6;
-  max-height: 120px;
-  overflow: auto;
 }
 
 /* ページネーション */
 .pagination {
   text-align: center;
-  padding: 10px;
+  padding: 20px 10px;
 }
 
 button {
-  padding: 8px 12px;
+  padding: 10px 16px;
   margin: 5px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  background: #444;
+  color: white;
 }
 
 button:disabled {
-  opacity: 0.5;
+  opacity: 0.3;
   cursor: not-allowed;
 }
+
+/* ==========================================
+   スマホ向け調整 (768px以下)
+========================================== */
+@media (max-width: 768px) {
+  h1 { font-size: 20px; }
+  .menu {
+    justify-content: flex-start; 
+  }
+  /* 2列表示に変更 */
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px; /* 間隔を少し詰める */
+    padding: 10px;
+  }
+
+  /* カード内の文字サイズを大きく */
+  .card {
+    padding: 12px;
+    min-height: auto;
+  }
+
+  .title {
+    font-size: 1.2em; /* タイトルを大きく */
+  }
+
+  .meta {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .desc {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* コントロール（検索・ボタン）のサイズアップ */
+  input, select, .sub-item, button {
+    font-size: 12px;
+  }
+  
+}
+
+/* さらに小さい画面（400px以下）での微調整 */
+@media (max-width: 400px) {
+  .grid {
+    grid-template-columns: 1fr; /* 非常に狭い場合は1列 */
+  }
+}
+
 </style>
 </head>
 
@@ -174,7 +237,7 @@ button:disabled {
 
 <div class="menu">
   <div class="menu-item general" onclick="location.href='index.html'">HOME</div>
-  <div class="menu-item general" onclick="location.href='hanyou.html'">汎用忍法</div>
+  <div class="menu-item hanyou" onclick="location.href='hanyou.html'">汎用忍法</div>
   <div class="menu-item hasuba" onclick="location.href='hasuba.html'">斜歯忍軍</div>
   <div class="menu-item kurama" onclick="location.href='kurama.html'">鞍馬神流</div>
   <div class="menu-item hagure" onclick="location.href='hagure.html'">ハグレモノ</div>
@@ -222,88 +285,88 @@ button:disabled {
 <script>
 const ITEMS_PER_PAGE = 12;
 let currentPage = 1;
-let currentSubCategory = ''; // 追加：選択中のサブメニュー属性
+let currentSubCategory = ''; 
 
 const data = [
 {
-    name:"鳳凰（ひのとり）",
+    name:"鳳凰",
     type:"攻撃忍法",
     category:"流派",
     meta:"間合 6 / コスト 2 / 指定特技：火術",
     desc:"接近戦。この攻撃は、対象の【生命力】が3点以上でないと行うことができない。攻撃が成功すると、目標に接近戦ダメージを2点与えることができる。"
 },
 {
-    name:"水霊（みずち）",
+    name:"水霊",
     type:"攻撃忍法",
     category:"流派",
     meta:"間合 2 / コスト なし / 指定特技：水術",
     desc:"射撃戦。攻撃が成功すると、目標に射撃戦ダメージを1点与えることができる。もし、自分が「水中」の戦場で戦っているなら、さらに接近戦ダメージを1点与えることができる。"
 },
 {
-    name:"土竜吼（どりゅうこう）",
+    name:"土竜吼",
     type:"攻撃忍法",
     category:"流派",
     meta:"間合 2 / コスト 2 / 指定特技：掘削術",
     desc:"接近戦。攻撃が成功すると、目標に接近戦ダメージを1点与える。目標のいるプロット値が自分のプロット値より低い場合、そのプロット値のキャラクターは一度このラウンドに回避判定を行っていても、もう一度回避判定を行うことができる（ただし、「クリティカルヒット」や「範囲攻撃」の奥義は使用できない）。"
 },
 {
-    name:"爪撃（そうが）",
+    name:"爪撃",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 なし / コスト 1 / 指定特技：針術",
     desc:"誰かが奥義を使用したとき、その奥義の奥義破り判定に成功すると使用できる。敵の使用者を目標に選ぶ。指定特技の判定に成功すると、目標に接近戦ダメージを1点与えることができる。"
 },
 {
-    name:"不意打ち（ふいうち）",
+    name:"不意打ち",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 なし / コスト なし / 指定特技：仕込み",
     desc:"自分がシーンプレイヤー時のドラマシーンに使用できる。好きなキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、目標に接近戦ダメージを1点与えることができる。この忍法は、同一セッション中に一度でも使用した相手には二度と効果をもたらさない。"
 },
 {
-    name:"布砦（ぬのとりで）",
+    name:"布砦",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 なし / コスト 3 / 指定特技：衣装術",
     desc:"誰かが自分に対して攻撃を行おうとしたときに使用できる。攻撃を行おうとした者を目標に選ぶ。指定特技の判定に成功すると、目標の命中判定のファンブル値を2上昇させることができる。"
 },
 {
-    name:"闇蜘蛛（やみぐも）",
+    name:"闇蜘蛛",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 2 / コスト 5 / 指定特技：縄術",
     desc:"戦闘中、自分が攻撃する代わりに使用できる。この忍法の間合内にいるキャラクター一人を目標に選ぶ。指定特技の判定に成功すると、目標に射撃戦ダメージを1点与えることができる。ただし、この忍法によってダメージを受けたことで、その特技分野は使用不能になる。"
 },
 {
-    name:"惨撃（ざんげき）",
+    name:"惨撃",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 なし / コスト 1 / 指定特技：拷問術",
     desc:"自分の命中判定が成功し、相手の回避判定が失敗したときに使用できる。指定特技の判定に成功し、自分の好きな忍具を一つ消費すると、その攻撃によるダメージを1点上昇させることができる（最大1点）。この効果によって上昇するダメージは、各攻撃忍法の最初に書いてあるもののみである。"
 },
 {
-    name:"武器破壊（ぶきはかい）",
+    name:"武器破壊",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 なし / コスト 2 / 指定特技：壊器術",
     desc:"自分の攻撃が成功し、相手にダメージを与えたときに使用できる。その攻撃の目標の中から一人を目標に選ぶ。指定特技の判定に成功すると、その目標は命中判定にマイナス2の修正を受ける。この効果は累積しない。"
 },
 {
-    name:"奈落（ならく）",
+    name:"奈落",
     type:"サポート忍法",
     category:"流派",
     meta:"間合 なし / コスト 2 / 指定特技：掘削術",
     desc:"「プロット」時に使用できる。指定特技の判定に成功すると、自分のプロットとは別に、「奈落」のプロットを行う。プロットを公開したタイミングで、「奈落」と同じプロット値のキャラクター全員は【掘削術】による判定を行う。失敗したキャラクターは逆凪となり、ファンブルエリアへ移動する。"
 },
 {
-    name:"機忍（きにん）",
+    name:"機忍",
     type:"装備忍法",
     category:"流派",
     meta:"間合 なし / コスト なし / 指定特技：なし",
     desc:"斜歯忍軍やその下位流派以外の流派忍法のサポート忍法を修得できるようになる（秘伝忍法は修得できない）。ただし、その忍法の指定特技は【絡繰術】となり、コストは1上昇する（なしのものは1になる）。"
 },
 {
-    name:"魔界工学（まかいこうがく）",
+    name:"魔界工学",
     type:"装備忍法",
     category:"流派",
     meta:"間合 なし / コスト なし / 指定特技：なし",
@@ -314,12 +377,10 @@ const data = [
 
 const grid = document.getElementById("grid");
 
-// 追加：サブメニュー切り替え関数
 function setSubCategory(element, cat) {
   currentSubCategory = cat;
-  currentPage = 1; // ページを1に戻す
+  currentPage = 1; 
   
-  // ボタンのアクティブ表示切り替え
   document.querySelectorAll('.sub-item').forEach(btn => {
     btn.classList.remove('active');
   });
@@ -338,7 +399,6 @@ function getFilteredData() {
       d.desc.toLowerCase().includes(search)
     )
     .filter(d => !filter || d.type.includes(filter))
-    // 追加：サブメニューによる絞り込み（空文字の場合は全表示）
     .filter(d => !currentSubCategory || d.category === currentSubCategory);
 }
 
@@ -354,7 +414,7 @@ function render() {
   grid.innerHTML = "";
 
   if (filtered.length === 0) {
-    grid.innerHTML = "<p style='text-align:center;'>該当する忍法がありません</p>";
+    grid.innerHTML = "<p style='text-align:center; grid-column: 1 / -1;'>該当する忍法がありません</p>";
     document.getElementById("pageInfo").textContent = "";
     document.getElementById("prev").disabled = true;
     document.getElementById("next").disabled = true;
@@ -364,19 +424,15 @@ function render() {
   pageData.forEach(d => {
     const card = document.createElement("div");
     card.className = "card";
-    
-    // サブカテゴリーの表示も追加したい場合は、以下のmeta部分を調整してください
     card.innerHTML = `
       <div class="title">${d.name}</div>
-      <div class="meta">${d.category || '未設定'} / ${d.type} / ${d.meta}</div>
+      <div class="meta">${d.category || '未設定'} / ${d.type}<br>${d.meta}</div>
       <div class="desc">${d.desc}</div>
     `;
     grid.appendChild(card);
   });
 
-  document.getElementById("pageInfo").textContent =
-    `${currentPage} / ${totalPages}`;
-
+  document.getElementById("pageInfo").textContent = `${currentPage} / ${totalPages}`;
   document.getElementById("prev").disabled = currentPage === 1;
   document.getElementById("next").disabled = currentPage === totalPages;
 }
